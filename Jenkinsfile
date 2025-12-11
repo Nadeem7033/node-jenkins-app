@@ -2,47 +2,24 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS_18' // NodeJS installation name in Jenkins
+        nodejs 'node18' // must match the name you entered in Jenkins
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Nadeem7033/node-jenkins-app.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install' // Use 'bat' on Windows
             }
         }
-
         stage('Run Tests') {
             steps {
-                sh 'npm test'
+                bat 'npm test'
             }
         }
-
-        stage('Build') {
-            steps {
-                echo 'Build step here if needed'
-            }
-        }
-
         stage('Deploy') {
             steps {
-                echo 'Deployment step (if any)'
+                bat 'echo Deployment step here'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Build and tests succeeded!'
-        }
-        failure {
-            echo 'Build failed!'
         }
     }
 }
