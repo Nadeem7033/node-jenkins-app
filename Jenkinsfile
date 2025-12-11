@@ -1,47 +1,48 @@
 pipeline {
     agent any
 
-    stages {
+    tools {
+        nodejs 'NodeJS_18' // NodeJS installation name in Jenkins
+    }
 
+    stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main', url: 'https://github.com/Nadeem7033/node-jenkins-app.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                sh 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'npm test'
+                sh 'npm test'
             }
         }
 
-        stage('Archive Files') {
+        stage('Build') {
             steps {
-                archiveArtifacts artifacts: '**/*', fingerprint: true
+                echo 'Build step here if needed'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying Node.js app...'
-                bat '''
-                if not exist C:\\node-deploy mkdir C:\\node-deploy
-                xcopy /s /y * C:\\node-deploy\\
-                '''
+                echo 'Deployment step (if any)'
             }
         }
+    }
 
-        stage('Start App') {
-            steps {
-                echo 'Starting server...'
-                bat 'node app.js'
-            }
+    post {
+        success {
+            echo 'Build and tests succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
